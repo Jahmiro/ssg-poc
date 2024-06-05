@@ -44,6 +44,7 @@ export const getStaticProps: GetStaticProps<Props> = async (context) => {
         pokemon: null,
         error: `Failed to fetch data: ${res.statusText}`,
       },
+      revalidate: 30,
     };
   }
 
