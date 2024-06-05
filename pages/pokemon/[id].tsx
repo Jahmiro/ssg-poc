@@ -1,4 +1,4 @@
-import { GetServerSideProps } from "next";
+import { GetStaticProps, GetStaticPaths } from "next";
 import { useRouter } from "next/router";
 
 type Stat = {
@@ -19,9 +19,20 @@ type Props = {
   error: string | null;
 };
 
-export const getServerSideProps: GetServerSideProps<Props> = async (
-  context
-) => {
+export const getStaticPaths: GetStaticPaths = async () => { 
+  const res = await fetch(
+    "https://dataset-ssr-ssg.s3.eu-north-1.amazonaws.com/pokemon-main/index.json"
+  );
+  const data: Pokemon[] = await res.json();
+
+  const paths = data.map((pokemon) => ({
+    params: { id: pokemon.id.toString() },
+  }));
+
+  return { paths, fallback: false };
+};
+
+export const getStaticProps: GetStaticProps<Props> = async (context) => {
   const { id } = context.params!;
   const res = await fetch(
     `https://dataset-ssr-ssg.s3.eu-north-1.amazonaws.com/pokemon-main/pokemon/${id}.json`

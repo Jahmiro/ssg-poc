@@ -1,5 +1,4 @@
-import { GetServerSideProps } from "next";
-import { useState } from "react";
+import { GetStaticProps } from "next";
 import Link from "next/link";
 
 type Pokemon = {
@@ -12,7 +11,7 @@ type Props = {
   data: Pokemon[];
 };
 
-export const getServerSideProps: GetServerSideProps<Props> = async () => {
+export const getStaticProps: GetStaticProps<Props> = async () => {
   const res = await fetch(
     "https://dataset-ssr-ssg.s3.eu-north-1.amazonaws.com/pokemon-main/index.json"
   );
