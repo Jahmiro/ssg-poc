@@ -54,6 +54,7 @@ export const getStaticProps: GetStaticProps<Props> = async (context) => {
       pokemon,
       error: null,
     },
+    revalidate: 30,
   };
 };
 
