@@ -1,5 +1,6 @@
 import { GetStaticProps, GetStaticPaths } from "next";
 import { useRouter } from "next/router";
+import React from "react";
 
 type Stat = {
   name: string;
@@ -19,7 +20,7 @@ type Props = {
   error: string | null;
 };
 
-export const getStaticPaths: GetStaticPaths = async () => { 
+export const getStaticPaths: GetStaticPaths = async () => {
   const res = await fetch(
     "https://dataset-ssr-ssg.s3.eu-north-1.amazonaws.com/pokemon-main/index.json"
   );
@@ -29,7 +30,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
     params: { id: pokemon.id.toString() },
   }));
 
-  return { paths, fallback: 'blocking' };
+  return { paths, fallback: true };
 };
 
 export const getStaticProps: GetStaticProps<Props> = async (context) => {
@@ -60,6 +61,14 @@ export const getStaticProps: GetStaticProps<Props> = async (context) => {
 
 const PokemonDetail: React.FC<Props> = ({ pokemon, error }) => {
   const router = useRouter();
+
+  if (router.isFallback) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <p>Loading...</p>
+      </div>
+    );
+  }
 
   if (error) {
     return <div>Error: {error}</div>;
